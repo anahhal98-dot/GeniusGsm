@@ -1,0 +1,14 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block extrastyle %}
+  <link rel="stylesheet" href="{% static 'admin/css/dark-theme.css' %}">
+{% endblock %}
+
+{% block title %}{{ block.super }} - Admin Dashboard{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+  <a href="{% url 'admin:index' %}">🖥️ Admin Dashboard</a>
+</h1>
+{% endblock %}

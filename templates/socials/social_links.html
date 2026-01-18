@@ -1,0 +1,31 @@
+<div class="social-links">
+    {% for link in social_links %}
+        <a href="{{ link.url }}" target="_blank" title="{{ link.get_platform_display }}" class="social-link">
+            {{ link.icon_emoji }}
+        </a>
+    {% endfor %}
+</div>
+
+<style>
+    .social-links {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin: 20px 0;
+    }
+
+    .social-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .social-link:hover {
+        transform: scale(1.2) translateY(-3px);
+    }
+</style>

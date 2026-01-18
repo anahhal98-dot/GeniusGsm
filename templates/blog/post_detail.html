@@ -1,0 +1,409 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ post.title }} - GeniusGSM{% endblock %}
+
+{% block extra_css %}
+<style>
+    .post-detail-container {
+        max-width: 800px;
+        margin: 0 auto;
+        animation: fadeIn 0.6s ease;
+    }
+
+    .post-detail-header {
+        margin-bottom: 30px;
+    }
+
+    .post-detail-title {
+        font-size: 42px;
+        font-weight: 700;
+        margin-bottom: 15px;
+        color: var(--accent);
+    }
+
+    .post-detail-meta {
+        display: flex;
+        gap: 20px;
+        color: var(--dark-fg-secondary);
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+
+    .post-detail-image {
+        width: 100%;
+        max-height: 500px;
+        object-fit: cover;
+        border-radius: 6px;
+        margin-bottom: 30px;
+        border: 1px solid var(--border);
+    }
+
+    .post-detail-actions {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .like-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 15px;
+        background-color: var(--dark-bg-secondary);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        color: var(--dark-fg);
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
+    .like-btn:hover {
+        background-color: var(--accent);
+        color: white;
+        border-color: var(--accent);
+        transform: scale(1.05);
+    }
+
+    .like-btn.liked {
+        background-color: var(--accent);
+        color: white;
+        border-color: var(--accent);
+    }
+
+    .like-count {
+        background-color: var(--dark-bg-secondary);
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 13px;
+    }
+
+    .share-buttons {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .share-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background-color: var(--dark-bg-secondary);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        color: var(--dark-fg);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-size: 18px;
+    }
+
+    .share-btn:hover {
+        background-color: var(--accent);
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .post-detail-content {
+        background-color: var(--dark-bg-secondary);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 30px;
+        margin-bottom: 40px;
+        line-height: 1.8;
+        font-size: 16px;
+    }
+
+    .post-detail-content p {
+        margin-bottom: 20px;
+    }
+
+    .post-detail-content h2,
+    .post-detail-content h3 {
+        margin-top: 30px;
+        margin-bottom: 15px;
+        color: var(--accent);
+    }
+
+    .post-detail-content code {
+        background-color: var(--dark-bg);
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+        color: #a0ff00;
+    }
+
+    /* Edit Delete Buttons */
+    .post-actions {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 30px;
+    }
+
+    .post-actions .btn {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+
+    /* Comments Section */
+    .comments-section {
+        margin-top: 40px;
+        padding-top: 40px;
+        border-top: 2px solid var(--border);
+    }
+
+    .comments-title {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 25px;
+        color: var(--accent);
+    }
+
+    .comments-list {
+        margin-bottom: 30px;
+    }
+
+    .comment {
+        background-color: var(--dark-bg-secondary);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 20px;
+        margin-bottom: 15px;
+        animation: slideIn 0.4s ease;
+    }
+
+    .comment-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .comment-author {
+        font-weight: 700;
+        color: var(--accent);
+    }
+
+    .comment-date {
+        font-size: 12px;
+        color: var(--dark-fg-secondary);
+    }
+
+    .comment-content {
+        color: var(--dark-fg);
+        line-height: 1.6;
+        margin-bottom: 10px;
+    }
+
+    .comment-actions {
+        display: flex;
+        gap: 10px;
+        font-size: 12px;
+    }
+
+    .comment-actions a {
+        color: var(--danger);
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+
+    .comment-actions a:hover {
+        color: #ff6b5b;
+    }
+
+    /* Comment Form */
+    .comment-form {
+        background-color: var(--dark-bg-secondary);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 25px;
+    }
+
+    .comment-form h3 {
+        font-size: 18px;
+        margin-bottom: 20px;
+        color: var(--accent);
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--dark-fg);
+    }
+
+    .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        background-color: var(--dark-bg);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        color: var(--dark-fg);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .form-group textarea:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.15);
+    }
+
+    .empty-comments {
+        text-align: center;
+        padding: 40px 20px;
+        color: var(--dark-fg-secondary);
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .post-detail-title {
+            font-size: 28px;
+        }
+
+        .post-detail-meta {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .post-detail-actions {
+            flex-direction: column;
+        }
+
+        .share-buttons {
+            width: 100%;
+            justify-content: space-around;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="post-detail-container">
+    <!-- Header -->
+    <div class="post-detail-header">
+        <h1 class="post-detail-title">{{ post.title }}</h1>
+        <div class="post-detail-meta">
+            <span>📝 By <strong>{{ post.author.get_full_name|default:post.author.username }}</strong></span>
+            <span>📅 {{ post.created_at|date:"M d, Y H:i" }}</span>
+            {% if post.updated_at != post.created_at %}
+                <span>✏️ Updated: {{ post.updated_at|date:"M d, Y" }}</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Image -->
+    {% if post.image %}
+        <img src="{{ post.image.url }}" alt="{{ post.title }}" class="post-detail-image">
+    {% else %}
+        <div class="post-detail-image" style="background: linear-gradient(135deg, #4a9eff 0%, #0f0f0f 100%); display: flex; align-items: center; justify-content: center; font-size: 80px;">📝</div>
+    {% endif %}
+
+    <!-- Actions -->
+    <div class="post-detail-actions">
+        <form method="post" action="{% url 'blog:toggle_like' post.slug %}" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="like-btn {% if user_liked %}liked{% endif %}">
+                {% if user_liked %}❤️{% else %}🤍{% endif %}
+                <span class="like-count">{{ post.get_likes_count }}</span>
+            </button>
+        </form>
+
+        <span style="color: var(--dark-fg-secondary);">💬 {{ post.get_comments_count }} Comments</span>
+
+        <div class="share-buttons">
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" class="share-btn" title="مشاركة على Facebook">f</a>
+            <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ post.title }}" target="_blank" class="share-btn" title="مشاركة على Twitter">𝕏</a>
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}" target="_blank" class="share-btn" title="مشاركة على LinkedIn">in</a>
+            <a href="https://wa.me/?text={{ post.title }}%20{{ request.build_absolute_uri }}" target="_blank" class="share-btn" title="مشاركة على WhatsApp">W</a>
+        </div>
+    </div>
+
+    <!-- Edit/Delete for Author -->
+    {% if user == post.author %}
+    <div class="post-actions">
+        <a href="{% url 'blog:post_edit' post.slug %}" class="btn btn-secondary">✏️ Edit</a>
+        <a href="{% url 'blog:post_delete' post.slug %}" class="btn btn-danger">🗑️ Delete</a>
+    </div>
+    {% endif %}
+
+    <!-- Content -->
+    <div class="post-detail-content">
+        {{ post.content|linebreaks }}
+    </div>
+
+    <!-- Comments Section -->
+    <div class="comments-section">
+        <h2 class="comments-title">Comments</h2>
+
+        <!-- Comments List -->
+        {% if comments %}
+            <div class="comments-list">
+                {% for comment in comments %}
+                    <div class="comment">
+                        <div class="comment-header">
+                            <span class="comment-author">{{ comment.author.get_full_name|default:comment.author.username }}</span>
+                            <span class="comment-date">{{ comment.created_at|date:"M d, Y H:i" }}</span>
+                        </div>
+                        <p class="comment-content">{{ comment.content }}</p>
+                        {% if user == comment.author %}
+                            <div class="comment-actions">
+                                <a href="{% url 'blog:delete_comment' comment.id %}">🗑️ Delete Comment</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-comments">
+                <p>No comments yet. Be the first to comment!</p>
+            </div>
+        {% endif %}
+
+        <!-- Comment Form -->
+        {% if user.is_authenticated %}
+            <div class="comment-form">
+                <h3>Add Your Comment</h3>
+                <form method="post" action="{% url 'blog:add_comment' post.slug %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ comment_form.content }}
+                    </div>
+                    <button type="submit" class="btn">Send Comment</button>
+                </form>
+            </div>
+        {% else %}
+            <div class="empty-comments">
+                <p>You must <a href="{% url 'admin:login' %}" style="color: var(--accent);">log in</a> to add a comment</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

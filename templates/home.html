@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}GeniusGSM - Home{% endblock %}
+
+{% block content %}
+<style>
+    .hero {
+        text-align: center;
+        padding: 80px 0;
+        animation: fadeIn 0.8s ease;
+    }
+
+    .hero h1 {
+        font-size: 56px;
+        margin-bottom: 20px;
+        color: var(--accent);
+        background: linear-gradient(135deg, var(--accent), #6fb3ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .hero p {
+        font-size: 18px;
+        color: var(--dark-fg-secondary);
+        margin-bottom: 30px;
+        line-height: 1.8;
+    }
+
+    .cta-buttons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-primary {
+        padding: 15px 40px;
+        font-size: 16px;
+    }
+
+    .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 80px;
+    }
+
+    .feature-card {
+        background-color: var(--dark-bg-secondary);
+        padding: 30px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        transition: all 0.3s ease;
+        animation: slideIn 0.6s ease;
+    }
+
+    .feature-card:hover {
+        border-color: var(--accent);
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(74, 158, 255, 0.1);
+    }
+
+    .feature-card h3 {
+        color: var(--accent);
+        margin-bottom: 15px;
+        font-size: 20px;
+    }
+
+    .feature-card p {
+        color: var(--dark-fg-secondary);
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+</style>
+
+<div class="hero">
+    <h1>Welcome to GeniusGSM</h1>
+    <p>Your gateway to innovation, technology insights, and digital excellence</p>
+</div>
+
+<div class="features">
+    <div class="feature-card">
+        <h3>📚 Quality Content</h3>
+        <p>Discover insightful articles and guides about technology, programming, and innovation.</p>
+    </div>
+
+    <div class="feature-card">
+        <h3>🚀 Stay Updated</h3>
+        <p>Follow us on social media to get the latest updates and announcements.</p>
+    </div>
+
+    <div class="feature-card">
+        <h3>💡 Expert Insights</h3>
+        <p>Learn from industry experts sharing their knowledge and experience.</p>
+    </div>
+</div>
+
+{% endblock %}

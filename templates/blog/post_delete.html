@@ -1,0 +1,175 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Confirm Delete Post - GeniusGSM{% endblock %}
+
+{% block extra_css %}
+<style>
+    .delete-container {
+        max-width: 600px;
+        margin: 80px auto;
+        animation: fadeIn 0.6s ease;
+    }
+
+    .delete-box {
+        background-color: var(--dark-bg-secondary);
+        border: 2px solid var(--danger);
+        border-radius: 6px;
+        padding: 40px;
+        text-align: center;
+    }
+
+    .delete-icon {
+        font-size: 80px;
+        margin-bottom: 20px;
+    }
+
+    .delete-title {
+        font-size: 32px;
+        font-weight: 700;
+        color: var(--danger);
+        margin-bottom: 15px;
+    }
+
+    .delete-message {
+        font-size: 16px;
+        color: var(--dark-fg-secondary);
+        margin-bottom: 20px;
+        line-height: 1.6;
+    }
+
+    .post-preview {
+        background-color: var(--dark-bg);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 20px;
+        margin-bottom: 30px;
+        text-align: right;
+    }
+
+    .post-preview-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--accent);
+        margin-bottom: 10px;
+    }
+
+    .post-preview-content {
+        font-size: 14px;
+        color: var(--dark-fg-secondary);
+        max-height: 100px;
+        overflow: hidden;
+    }
+
+    .delete-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+    }
+
+    .delete-actions .btn {
+        padding: 12px 30px;
+        font-size: 16px;
+    }
+
+    .btn-confirm {
+        background-color: var(--danger);
+    }
+
+    .btn-confirm:hover {
+        background-color: #ff6b5b;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(217, 83, 79, 0.3);
+    }
+
+    .btn-cancel {
+        background-color: var(--dark-bg-secondary);
+        border: 1px solid var(--border);
+        color: var(--dark-fg);
+    }
+
+    .btn-cancel:hover {
+        background-color: var(--border);
+        transform: translateY(-2px);
+    }
+
+    .warning-text {
+        font-size: 13px;
+        color: var(--danger);
+        margin-top: 20px;
+        padding: 10px;
+        background-color: rgba(217, 83, 79, 0.1);
+        border-left: 3px solid var(--danger);
+        border-radius: 2px;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .delete-container {
+            margin: 40px auto;
+        }
+
+        .delete-box {
+            padding: 30px 20px;
+        }
+
+        .delete-title {
+            font-size: 24px;
+        }
+
+        .delete-icon {
+            font-size: 60px;
+        }
+
+        .delete-actions {
+            flex-direction: column;
+        }
+
+        .delete-actions .btn {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="delete-container">
+    <div class="delete-box">
+        <div class="delete-icon">⚠️</div>
+        <h1 class="delete-title">Are You Sure?</h1>
+        
+        <p class="delete-message">
+            You are about to delete this post.<br>
+            This action cannot be undone!
+        </p>
+
+        <!-- Post Preview -->
+        <div class="post-preview">
+            <div class="post-preview-title">{{ object.title }}</div>
+            <div class="post-preview-content">{{ object.content|truncatewords:20 }}</div>
+        </div>
+
+        <!-- Action Buttons -->
+        <form method="post" style="display: inline;">
+            {% csrf_token %}
+            <div class="delete-actions">
+                <button type="submit" class="btn btn-confirm">🗑️ Yes, Delete It</button>
+                <a href="{% url 'blog:post_detail' object.slug %}" class="btn btn-cancel">❌ Cancel</a>
+            </div>
+        </form>
+
+        <div class="warning-text">
+            ⚠️ Warning: Deletion is permanent and cannot be undone
+        </div>
+    </div>
+</div>
+{% endblock %}
